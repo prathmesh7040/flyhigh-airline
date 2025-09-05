@@ -2,7 +2,7 @@
 An Summer Internship Project based on the MERN Stack an end-to-end project
 
 
-⚙️ How to Run the Project
+How to Run the Project
 Follow these steps to get the application running on your local machine.
 
 Prerequisites
