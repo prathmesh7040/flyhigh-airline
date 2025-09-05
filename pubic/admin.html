@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - FlyHigh Airlines</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Your existing CSS styles go here */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+    .main-header { background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .main-header .logo { font-size: 1.8rem; font-weight: bold; color: #0056b3; text-decoration: none; }
+    .main-header .nav-links { list-style: none; display: flex; align-items: center; margin: 0; padding: 0; }
+    .main-header .nav-links li { margin-left: 25px; }
+    .main-header .nav-links a { color: #333; text-decoration: none; font-size: 1rem; transition: color 0.3s; display: flex; align-items: center; }
+    .main-header .nav-links a:hover { color: #0056b3; }
+    .admin-container { flex: 1; padding: 2rem 5%; }
+    .admin-container h1 { text-align: center; color: #333; margin-bottom: 30px; }
+    .admin-section { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); margin-bottom: 30px; }
+    .admin-section h2 { margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; color: #0056b3; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .input-group { margin-bottom: 15px; text-align: left; }
+    .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+    .input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem; box-sizing: border-box; }
+    .btn { background-color: #ffc107; color: #333; padding: 10px 20px; text-decoration: none; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; }
+    .btn:hover { background-color: #e0a800; }
+    .btn-danger { background-color: #dc3545; color: white; }
+    .btn-danger:hover { background-color: #c82333; }
+    .btn-secondary { background-color: #6c757d; color: white; font-size: 0.8rem; padding: 5px 10px; }
+    .form-actions { grid-column: 1 / -1; text-align: right; margin-top: 10px; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
+    thead { background-color: #f8f9fa; font-weight: bold; }
+    tbody tr:nth-child(even) { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="#" class="logo">FlyHigh Airlines</a>
+    <ul class="nav-links">
+      <li><a href="/api/logout"><i class="fas fa-sign-out-alt"></i> &nbsp;Logout</a></li>
+    </ul>
+  </header>
+
+  <main class="admin-container">
+    <h1>Admin Dashboard</h1>
+
+    <section class="admin-section">
+      <h2>Manage Flights</h2>
+      
+      <form id="add-flight-form">
+          <div class="form-grid">
+              <div class="input-group">
+                  <label for="flight-number">Flight Number</label>
+                  <input type="text" id="flight-number" required>
+              </div>
+              <div class="input-group">
+                  <label for="origin">Origin</label>
+                  <input type="text" id="origin" required>
+              </div>
+              <div class="input-group">
+                  <label for="destination">Destination</label>
+                  <input type="text" id="destination" required>
+              </div>
+              <div class="input-group">
+                  <label for="departure-time">Departure Time</label>
+                  <input type="datetime-local" id="departure-time" required>
+              </div>
+              <div class="input-group">
+                  <label for="arrival-time">Arrival Time</label>
+                  <input type="datetime-local" id="arrival-time" required>
+              </div>
+              <div class="input-group">
+                  <label for="price">Price ($)</label>
+                  <input type="number" id="price" min="0" required>
+              </div>
+              <div class="form-actions">
+                  <button type="submit" class="btn">Add Flight</button>
+              </div>
+          </div>
+      </form>
+      
+      <h3 style="margin-top: 30px;">Existing Flights</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Flight No.</th>
+              <th>Origin</th>
+              <th>Destination</th>
+              <th>Departure</th>
+              <th>Arrival</th>
+              <th>Price</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="flights-table-body">
+            </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Customer Records</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>User ID</th>
+              <th>Name</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody id="customers-table-body">
+            </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="site-footer">
+    </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFlights();
+        loadCustomers();
+    });
+
+    // --- Flight Management ---
+    async function loadFlights() {
+        try {
+            const response = await fetch('/api/admin/flights');
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = '/login.html';
+                return;
+            }
+            const flights = await response.json();
+            const tableBody = document.getElementById('flights-table-body');
+            tableBody.innerHTML = ''; // Clear existing rows
+            flights.forEach(flight => {
+                const row = `
+                    <tr data-id="${flight.id}">
+                      <td>${flight.flight_number}</td>
+                      <td>${flight.origin}</td>
+                      <td>${flight.destination}</td>
+                      <td>${new Date(flight.departure_time).toLocaleString()}</td>
+                      <td>${new Date(flight.arrival_time).toLocaleString()}</td>
+                      <td>$${flight.price.toFixed(2)}</td>
+                      <td><button class="btn btn-danger btn-remove">Remove</button></td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        } catch (error) {
+            console.error('Failed to load flights:', error);
+        }
+    }
+
+    document.getElementById('add-flight-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const flightData = {
+            flight_number: document.getElementById('flight-number').value,
+            origin: document.getElementById('origin').value,
+            destination: document.getElementById('destination').value,
+            departure_time: document.getElementById('departure-time').value,
+            arrival_time: document.getElementById('arrival-time').value,
+            price: parseFloat(document.getElementById('price').value)
+        };
+        
+        try {
+            const response = await fetch('/api/admin/flights', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(flightData)
+            });
+            if (response.ok) {
+                alert('Flight added successfully!');
+                this.reset();
+                loadFlights(); // Refresh the table
+            } else {
+                alert('Failed to add flight.');
+            }
+        } catch (error) {
+            console.error('Error adding flight:', error);
+        }
+    });
+
+    document.getElementById('flights-table-body').addEventListener('click', async function(e) {
+        if (e.target.classList.contains('btn-remove')) {
+            const flightRow = e.target.closest('tr');
+            const flightId = flightRow.dataset.id;
+            if (confirm('Are you sure you want to remove this flight?')) {
+                try {
+                    const response = await fetch(`/api/admin/flights/${flightId}`, { method: 'DELETE' });
+                    if(response.ok) {
+                        flightRow.remove();
+                    } else {
+                        alert('Failed to remove flight.');
+                    }
+                } catch (error) {
+                    console.error('Error removing flight:', error);
+                }
+            }
+        }
+    });
+
+    // --- Customer Management ---
+    async function loadCustomers() {
+        try {
+            const response = await fetch('/api/admin/customers');
+            if (!response.ok) throw new Error('Failed to fetch customers');
+            const customers = await response.json();
+            const tableBody = document.getElementById('customers-table-body');
+            tableBody.innerHTML = '';
+            customers.forEach(customer => {
+                const row = `
+                    <tr>
+                      <td>USR${customer.id}</td>
+                      <td>${customer.fullname}</td>
+                      <td>${customer.email}</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        } catch (error) {
+            console.error('Failed to load customers:', error);
+        }
+    }
+  </script>
+
+</body>
+</html>

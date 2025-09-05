@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Dashboard - FlyHigh Airlines</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Your existing CSS styles go here */
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+    .main-header { background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .main-header .logo { font-size: 1.8rem; font-weight: bold; color: #0056b3; text-decoration: none; }
+    .main-header .nav-links { list-style: none; display: flex; align-items: center; margin: 0; padding: 0; }
+    .main-header .nav-links li { margin-left: 25px; }
+    .main-header .nav-links a { color: #333; text-decoration: none; font-size: 1rem; transition: color 0.3s; display: flex; align-items: center; }
+    .main-header .nav-links a:hover { color: #0056b3; }
+    .dashboard-container { flex: 1; padding: 2rem 5%; }
+    .dashboard-container h1 { text-align: center; color: #333; margin-bottom: 30px; }
+    .dashboard-section { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); margin-bottom: 30px; }
+    .dashboard-section h2 { margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; color: #0056b3; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; align-items: flex-end; }
+    .input-group { text-align: left; }
+    .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+    .input-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 0.95rem; box-sizing: border-box; }
+    .btn { background-color: #ffc107; color: #333; padding: 10px 20px; text-decoration: none; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; width: 100%; }
+    .btn:hover { background-color: #e0a800; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
+    thead { background-color: #f8f9fa; font-weight: bold; }
+    .modal { display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+    .modal-content { background-color: #fefefe; margin: 10% auto; padding: 30px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 10px; position: relative; }
+    .close-btn { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .modal-actions .btn { width: auto; }
+    .btn-secondary { background-color: #6c757d; color: white; }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="customer.html" class="logo">FlyHigh Airlines</a>
+    <ul class="nav-links">
+      <li><a href="/api/logout"><i class="fas fa-sign-out-alt"></i> &nbsp;Logout</a></li>
+    </ul>
+  </header>
+
+  <main class="dashboard-container">
+    <h1 id="welcome-message">Welcome!</h1>
+
+    <section class="dashboard-section">
+        <h2>Search for Flights</h2>
+        <form id="flight-search-form">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="origin">From</label>
+                    <input type="text" id="origin" placeholder="e.g., Pune" value="Pune (PNQ)">
+                </div>
+                <div class="input-group">
+                    <label for="destination">To</label>
+                    <input type="text" id="destination" placeholder="e.g., Delhi" value="Delhi (DEL)">
+                </div>
+                <div class="input-group">
+                    <label for="departure-date">Date</label>
+                    <input type="date" id="departure-date" value="2025-10-15">
+                </div>
+                <div class="input-group">
+                    <button type="submit" class="btn">Search Flights</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <section class="dashboard-section" id="booking-section">
+        <h2>Available Flights</h2>
+        <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Flight No.</th>
+                  <th>Departs</th>
+                  <th>Arrives</th>
+                  <th>Price</th>
+                  <th>Book</th>
+                </tr>
+              </thead>
+              <tbody id="flights-results-body">
+                </tbody>
+            </table>
+        </div>
+    </section>
+  </main>
+  
+  <div id="booking-preview-modal" class="modal">
+      <div class="modal-content">
+          <span class="close-btn">&times;</span>
+          <h3>Confirm Your Booking</h3>
+          <div id="modal-flight-details"></div>
+          <div class="modal-actions">
+              <button class="btn btn-secondary" id="cancel-booking">Cancel</button>
+              <button class="btn" id="confirm-booking-btn">Confirm & Book</button>
+          </div>
+      </div>
+  </div>
+  
+  <footer class="site-footer">
+    </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/api/user/data');
+            if (!response.ok) {
+                 window.location.href = '/login.html'; // Redirect if not logged in
+                 return;
+            }
+            const userData = await response.json();
+            document.getElementById('welcome-message').textContent = `Welcome, ${userData.fullname}!`;
+        } catch (error) {
+            console.error('Failed to fetch user data', error);
+            window.location.href = '/login.html';
+        }
+    });
+
+    // --- Flight Search ---
+    document.getElementById('flight-search-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const origin = document.getElementById('origin').value;
+        const destination = document.getElementById('destination').value;
+        const date = document.getElementById('departure-date').value;
+
+        try {
+            const response = await fetch(`/api/flights/search?origin=${origin}&destination=${destination}&date=${date}`);
+            const flights = await response.json();
+            const resultsBody = document.getElementById('flights-results-body');
+            resultsBody.innerHTML = ''; // Clear previous results
+
+            if(flights.length === 0) {
+                 resultsBody.innerHTML = '<tr><td colspan="5">No flights found for this route and date.</td></tr>';
+            } else {
+                flights.forEach(flight => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${flight.flight_number}</td>
+                        <td>${flight.origin} - ${new Date(flight.departure_time).toLocaleTimeString()}</td>
+                        <td>${flight.destination} - ${new Date(flight.arrival_time).toLocaleTimeString()}</td>
+                        <td>$${flight.price.toFixed(2)}</td>
+                        <td><button class="btn book-now-btn">Book Now</button></td>
+                    `;
+                    // Store full flight details in the row's dataset for the modal
+                    row.dataset.flightDetails = JSON.stringify(flight);
+                    resultsBody.appendChild(row);
+                });
+            }
+        } catch (error) {
+            console.error('Error searching for flights:', error);
+        }
+    });
+    
+    // --- Booking Modal Logic ---
+    const modal = document.getElementById('booking-preview-modal');
+    let currentFlightForBooking = null;
+
+    document.getElementById('flights-results-body').addEventListener('click', function(e) {
+        if (e.target.classList.contains('book-now-btn')) {
+            const flightRow = e.target.closest('tr');
+            currentFlightForBooking = JSON.parse(flightRow.dataset.flightDetails);
+            openPreviewModal(currentFlightForBooking);
+        }
+    });
+    
+    function openPreviewModal(details) {
+        const detailsContainer = document.getElementById('modal-flight-details');
+        detailsContainer.innerHTML = `
+            <p><strong>Flight:</strong> ${details.flight_number}</p>
+            <p><strong>From:</strong> ${details.origin}</p>
+            <p><strong>To:</strong> ${details.destination}</p>
+            <p><strong>Date & Time:</strong> ${new Date(details.departure_time).toLocaleString()}</p>
+            <hr>
+            <p><strong>Total Price:</strong> <strong>$${details.price.toFixed(2)}</strong></p>
+        `;
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+        currentFlightForBooking = null;
+    }
+
+    document.querySelector('.close-btn').addEventListener('click', closeModal);
+    document.getElementById('cancel-booking').addEventListener('click', closeModal);
+
+    document.getElementById('confirm-booking-btn').addEventListener('click', async () => {
+        if (!currentFlightForBooking) return;
+        
+        try {
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flightId: currentFlightForBooking.id })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                alert('Booking confirmed! Thank you for flying with FlyHigh Airlines.');
+                closeModal();
+            } else {
+                 alert(`Booking failed: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('Error confirming booking:', error);
+        }
+    });
+  </script>
+
+</body>
+</html>

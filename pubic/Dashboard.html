@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FlyHigh Airlines - Your Gateway to the World</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Basic Styling */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f7f6;
+      color: #333;
+    }
+
+    .container {
+      padding: 2rem 5%;
+    }
+
+    /* New Header Styling */
+    .main-header {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .main-header .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #0056b3;
+      text-decoration: none;
+    }
+
+    .main-header .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .main-header .nav-links li {
+      margin-left: 25px;
+    }
+
+    .main-header .nav-links a {
+      color: #333;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s;
+      display: flex;
+      align-items: center;
+    }
+
+    .main-header .nav-links a:hover {
+      color: #0056b3;
+    }
+
+    .main-header .nav-links .search-bar {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        padding: 5px 10px;
+    }
+
+    .main-header .nav-links .search-bar input {
+        border: none;
+        outline: none;
+        padding-left: 5px;
+        font-size: 0.9rem;
+    }
+
+    .main-header .nav-links .search-bar i {
+        color: #666;
+    }
+
+
+    /* Hero Section */
+    .site-hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://plus.unsplash.com/premium_photo-1679830513873-5f9163fcc04a?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center/cover;
+      color: white;
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .site-hero h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .site-hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      background-color: #ffc107;
+      color: #333;
+      padding: 12px 25px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #e0a800;
+    }
+
+    /* General Section Styling */
+    .section {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: #ffc107;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Flight Packages */
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .package-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      text-align: left;
+    }
+
+    .package-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+    }
+
+    .package-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .package-content {
+      padding: 20px;
+    }
+
+    .package-content h3 {
+      margin-top: 0;
+      color: #0056b3;
+    }
+
+    .package-content p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      margin: 10px 0;
+    }
+
+    /* Famous Places */
+    .places-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .place-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .place-card img {
+      width: 100%;
+      display: block;
+      transition: transform 0.4s;
+    }
+
+    .place-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .place-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .place-overlay h3 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    /* Footer Styling */
+    .site-footer {
+      background-color: #333;
+      color: white;
+      padding: 40px 5%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .footer-section {
+      padding: 0 15px;
+    }
+
+    .footer-section h4 {
+      font-size: 1.2rem;
+      color: #ffc107;
+      margin-bottom: 15px;
+    }
+
+    .footer-section p, .footer-section a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .footer-section a:hover {
+      color: white;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+
+    .feedback-form input, .feedback-form textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        border: 1px solid #555;
+        background-color: #444;
+        color: white;
+    }
+
+    .feedback-form button {
+        background-color: #ffc107;
+        color: #333;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .feedback-form button:hover {
+        background-color: #e0a800;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <a href="Dashboard.html" class="logo">FlyHigh Airlines</a>
+    <ul class="nav-links">
+      <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> &nbsp;Login</a></li>
+      <li><a href="support.html"><i class="fas fa-headset"></i> &nbsp;Support</a></li>
+      <li>
+        <div class="search-bar">
+          <input type="text" placeholder="Search flights...">
+          <i class="fas fa-search"></i>
+        </div>
+      </li>
+      <li><a href="sign-up.html" class="btn">Sign In</a></li>
+    </ul>
+  </header>
+
+  <section class="site-hero">
+    <h1>Welcome to FlyHigh Airlines</h1>
+    <p>Book your flight in just a few clicks</p>
+    <a href="login.html" class="btn">Get Started</a>
+  </section>
+
+  <main class="container">
+    <section id="welcome" class="section">
+      <h2 class="section-title">Discover a New Way to Travel</h2>
+      <p style="max-width: 800px; margin: 0 auto;">At FlyHigh Airlines, we're dedicated to providing you with an unparalleled travel experience. From easy online booking to exceptional in-flight service, your journey is our priority. Explore the world with us and create unforgettable memories.</p>
+    </section>
+
+    <section id="packages" class="section">
+      <h2 class="section-title">Exclusive Flight Packages</h2>
+      <div class="packages-grid">
+        <div class="package-card">
+          <img src="https://images.unsplash.com/photo-1570097703229-b195d6dd291f?q=80&w=644&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Eiffel Tower in Paris">
+          <div class="package-content">
+            <h3>Romantic Paris Getaway</h3>
+            <p>Experience the city of lights. This package includes a round-trip ticket and a city tour pass.</p>
+            <div class="price">From $799</div>
+            <a href="login.html" class="btn">Book Now</a>
+          </div>
+        </div>
+        <div class="package-card">
+          <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Streets of Tokyo">
+          <div class="package-content">
+            <h3>Vibrant Tokyo Adventure</h3>
+            <p>Explore the blend of ancient tradition and futuristic technology. Includes flight and express train pass.</p>
+            <div class="price">From $950</div>
+            <a href="login.html" class="btn">Book Now</a>
+          </div>
+        </div>
+        <div class="package-card">
+          <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Times Square, New York">
+          <div class="package-content">
+            <h3>The Big Apple Experience</h3>
+            <p>Dive into the heart of New York City. This package offers a flight and a 3-day metro card.</p>
+            <div class="price">From $680</div>
+            <a href="login.html" class="btn">Book Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="destinations" class="section">
+      <h2 class="section-title">Inspiring Destinations</h2>
+      <div class="places-grid">
+        <div class="place-card">
+          <img src="https://plus.unsplash.com/premium_photo-1675975706513-9daba0ec12a8?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Colosseum in Rome">
+          <div class="place-overlay">
+            <h3>Rome, Italy</h3>
+          </div>
+        </div>
+        <div class="place-card">
+          <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sydney Opera House">
+          <div class="place-overlay">
+            <h3>Sydney, Australia</h3>
+          </div>
+        </div>
+        <div class="place-card">
+          <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Fushimi Inari Shrine in Kyoto">
+          <div class="place-overlay">
+            <h3>Kyoto, Japan</h3>
+          </div>
+        </div>
+        <div class="place-card">
+          <img src="https://plus.unsplash.com/premium_photo-1664303467567-17891a27998a?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Pyramids of Giza, Cairo">
+          <div class="place-overlay">
+            <h3>Cairo, Egypt</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-section">
+      <h4>Company Info</h4>
+      <p>FlyHigh Airlines has been a leader in connecting people and places for over 25 years. We are committed to safety, comfort, and exceptional customer service.</p>
+    </div>
+    <div class="footer-section">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li><a href="booking-info.html">Booking Information</a></li>
+        <li><a href="sitemap.html">Sitemap</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>Give Us Feedback</h4>
+      <form class="feedback-form">
+        <input type="email" placeholder="Your Email">
+        <textarea rows="3" placeholder="Your feedback..."></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </footer>
+
+</body>
+</html>
